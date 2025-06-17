@@ -2,8 +2,12 @@ package domain;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.assertj.core.api.Assertions;
 import org.example.domain.ShoppingCartCalculatorService;
+import org.example.domain.models.Customer;
+import org.example.domain.models.CustomerType;
 import org.example.domain.models.Product;
 import org.example.domain.models.ShoppingCart;
 
@@ -12,20 +16,22 @@ import java.util.stream.Collectors;
 
 public class ShoppingCartStepDefs {
     ShoppingCart shoppingCart;
+    Customer customer;
+    float calculatedTotalPrice;
 
     @Given("an individual")
     public void anIndividual() {
-
+        customer = new Customer(CustomerType.INDIVIDUAL);
     }
 
     @Given("a big company")
     public void aBigCompany() {
-
+        customer = new Customer(CustomerType.BIG_COMPANY);
     }
 
     @Given("a small company")
     public void aSmallCompany() {
-
+        customer = new Customer(CustomerType.SMALL_COMPANY);
     }
 
     @Given("an empty shopping cart")
@@ -41,9 +47,14 @@ public class ShoppingCartStepDefs {
         shoppingCart = new ShoppingCart(products);
     }
 
-    @Given("total price is {float}")
-    public void assertTotalPrice(float totalPrice) {
+    @When("calculation is done")
+    public void calculate() {
         var calculator = new ShoppingCartCalculatorService();
-        Assertions.assertThat(calculator.calculate(shoppingCart)).isEqualTo(totalPrice);
+        calculatedTotalPrice = calculator.calculate(customer, shoppingCart);
+    }
+
+    @Then("total price is {float}")
+    public void assertTotalPrice(float totalPrice) {
+        Assertions.assertThat(calculatedTotalPrice).isEqualTo(totalPrice);
     }
 }
