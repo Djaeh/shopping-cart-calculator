@@ -14,3 +14,12 @@ Feature: Calculate shopping cart total price
     Given a small company
     And an empty shopping cart
     Then total price is 0
+
+  Scenario: Shopping cart for an individual
+    Given an individual
+    And a shopping cart containing
+      | id | productName                 | quantity |
+      | 1  | "High quality smartphone"   | 2        |
+      | 2  | "Middle quality smartphone" | 1        |
+      | 3  | "laptop"                    | 3        |
+    Then total price is 7400
